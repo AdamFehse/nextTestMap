@@ -1,0 +1,27 @@
+/* Sidebar.module.css */
+
+.sidebarButton {
+    position: fixed; /* Position it fixed on the screen */
+    top: 20px; /* Adjust vertical position */
+    right: 20px; /* Move the button to the far right */
+    z-index: 1050; /* Ensure it stays on top of other elements */
+    transition: opacity .0s ease; /* Add transition effect */
+    margin-right: 2vw; /* Add margin for more space if needed */
+  }
+  
+  /* When the sidebar is open, the button fades out */
+  .sidebarButton.hidden {
+    opacity: 0;
+    pointer-events: none; /* Disable click events when hidden */
+  }
+  
+  .categoryButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .categoryButtons button {
+    width: 100%;
+  }

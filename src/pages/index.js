@@ -1,55 +1,79 @@
 import Head from 'next/head';
-
-import Layout from '@components/Layout';
-import Section from '@components/Section';
-import Container from '@components/Container';
-import Map from '@components/Map';
-import Button from '@components/Button';
-
+import { useState, useEffect, useRef } from 'react';
+import Map from '@components/Map'; // Import the Map component
+import Sidebar from '@components/Sidebar/Sidebar'; // Import Sidebar component
 import styles from '@styles/Home.module.scss';
 
-const DEFAULT_CENTER = [38.907132, -77.036546]
+const DEFAULT_CENTER = [31.244725, -111.060728]; // Center coordinates for the map
 
 export default function Home() {
+  const [projects, setProjects] = useState([]); // State to store all projects
+  const [filteredProjects, setFilteredProjects] = useState([]); // State to store filtered projects
+  const mapRef = useRef(null); // Reference to the map
+
+  // Load JSON data once
+  useEffect(() => {
+    const loadJsonData = async () => {
+      const response = await fetch('/nextTestMap/storymapdata.json');
+      const jsonData = await response.json();
+      setProjects(jsonData); // Set the data
+      setFilteredProjects(jsonData); // Initially, show all projects
+    };
+    loadJsonData();
+  }, []);
+
   return (
-    <Layout>
+    <>
       <Head>
         <title>Next.js Leaflet Starter</title>
         <meta name="description" content="Create mapping apps with Next.js Leaflet Starter" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Section>
-        <Container>
-          <h1 className={styles.title}>
-            Next.js Leaflet Starter
-          </h1>
+      {/* Sidebar */}
+      <Sidebar
+        projects={projects}
+        filteredProjects={filteredProjects}
+        setFilteredProjects={setFilteredProjects}
+        mapRef={mapRef} // Pass the map ref to the sidebar
+      />
 
-          <Map className={styles.homeMap} width="800" height="400" center={DEFAULT_CENTER} zoom={12}>
-            {({ TileLayer, Marker, Popup }) => (
-              <>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                />
-                <Marker position={DEFAULT_CENTER}>
-                  <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                  </Popup>
-                </Marker>
-              </>
-            )}
-          </Map>
-
-          <p className={styles.description}>
-            <code className={styles.code}>npx create-next-app -e https://github.com/colbyfayock/next-leaflet-starter</code>
-          </p>
-
-          <p className={styles.view}>
-            <Button href="https://github.com/colbyfayock/next-leaflet-starter">Vew on GitHub</Button>
-          </p>
-        </Container>
-      </Section>
-    </Layout>
-  )
+      {/* Map */}
+      <div className={styles.homeMapContainer} style={{ position: 'relative' }}>
+        <Map
+          className={styles.homeMap}
+          center={DEFAULT_CENTER}
+          zoom={9}
+          projects={filteredProjects}
+          ref={mapRef} // Pass the map ref here
+        >
+          {({ TileLayer, Marker, Popup }) => (
+            <>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+              />
+              {/* Render markers based on JSON data */}
+              {filteredProjects.map((project, index) => {
+                const lat = parseFloat(project.Latitude);
+                const lng = parseFloat(project.Longitude);
+                if (!isNaN(lat) && !isNaN(lng)) {
+                  return (
+                    <Marker key={index} position={[lat, lng]}>
+                      <Popup>
+                        <strong>{project['Project Name']}</strong>
+                        <br />
+                        {project['DescriptionShort']}
+                      </Popup>
+                    </Marker>
+                  );
+                }
+                return null;
+              })}
+            </>
+          )}
+        </Map>
+      </div>
+    </>
+  );
 }

@@ -1,30 +1,36 @@
 {
   "name": "next-leaflet-starter",
-  "homepage": "https://next-leaflet-starter.netlify.app",
+  "homepage": "https://adamfehse.github.io/nextTestMap",
   "version": "0.1.0",
-  "license": "MIT",
-  "author": "Colby Fayock <hello@colbyfayock.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/colbyfayock/next-leaflet-starter"
+    "url": "https://github.com/AdamFehse/nextTestMap"
   },
   "bugs": {
-    "url": "https://github.com/colbyfayock/next-leaflet-starter/issues"
+    "url": "https://github.com/AdamFehse/nextTestMap/issues"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "copy-webpack-plugin": "^11.0.0",
     "leaflet": "^1.9.4",
     "next": "^14.0.1",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.7",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "react-leaflet": "^4.2.1",
     "sass": "^1.69.5"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.2.0"
   }
 }

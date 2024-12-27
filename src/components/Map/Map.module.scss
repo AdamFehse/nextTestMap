@@ -1,4 +1,16 @@
 .map {
   width: 100%;
-  height: 100%;
+  height: 100%; /* Make sure it fills the entire container */
+}
+
+.homeMapContainer {
+  width: 100%;
+  height: 100vh; /* Take full screen height */
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .homeMapContainer {
+    height: 100vh; /* Ensure the map takes full viewport height on mobile */
+  }
 }
